@@ -24,3 +24,13 @@ app.get('/talker', async (_req, res) => {
   } 
      return res.status(200).json([]);
 });
+
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const users = await getAllTalkers();
+  const useId = users.find((element) => element.id === Number(id));
+  if (useId) {
+    return res.status(200).json(useId);
+  } 
+  return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
+});
