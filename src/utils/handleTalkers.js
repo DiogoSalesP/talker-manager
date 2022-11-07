@@ -77,7 +77,7 @@ const isValidTalkWatchedAt = (req, res, next) => {
 
 const isValidTalkRate = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk.rate) {
+  if (talk.rate === undefined) {
     return res.status(400).json({ message: 'O campo "rate" é obrigatório' });
   }
   if (talk.rate > 5 || talk.rate < 1 || !Number.isInteger(talk.rate)) {
@@ -103,6 +103,24 @@ const registration = async (req, res, next) => {
   return next();
 };
 
+const isValidEditedPerson = async (req, res, next) => {
+  const talker = await getAllTalkers();
+  const useId = req.params.id;
+  const { name, age, talk } = req.body;
+  const newDData = talker.find((ele) => ele.id === Number(useId));
+  if (newDData) {
+    newDData.id = Number(useId);
+    newDData.name = name;
+    newDData.age = age;
+    newDData.talk = talk;
+  } 
+  const allDate = JSON.stringify([...talker, newDData]);
+  await fs.writeFile(userPath, allDate);
+  res.status(200).json(newDData);
+
+  return next();
+};
+
  module.exports = {
   getAllTalkers,
   isValidAuthorization,
@@ -113,4 +131,5 @@ const registration = async (req, res, next) => {
   isValidTalkWatchedAt,
   registration,
   generateToken,
+  isValidEditedPerson,
  };

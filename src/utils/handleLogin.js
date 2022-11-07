@@ -1,5 +1,3 @@
-// const crypto = require('crypto');
-
 const isValidEmail = (req, res, next) => {
   const { email } = req.body;
   const emailValidation = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
@@ -26,12 +24,7 @@ const isValidPassword = (req, res, next) => {
   next();
 };
 
-// function token() {
-//   return crypto.randomBytes(8).toString('hex');
-// }
-
 module.exports = {
-  // token,
   isValidEmail,
   isValidPassword,
 };

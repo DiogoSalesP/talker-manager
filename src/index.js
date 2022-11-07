@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { getAllTalkers, isValidAuthorization, isValidName, isValidAge, isValidTalk, isValidTalkRate,
-  isValidTalkWatchedAt, registration, generateToken,
+  isValidTalkWatchedAt, registration, generateToken, isValidEditedPerson,
    } = require('./utils/handleTalkers');
 const { isValidEmail, isValidPassword } = require('./utils/handleLogin');
 
@@ -48,4 +48,10 @@ app.post('/talker', isValidAuthorization, isValidName, isValidAge, isValidTalk,
   (req, res) => {
   const body = req;
   res.status(200).json(body);
+});
+
+app.put('/talker/:id', isValidAuthorization, isValidName, isValidAge, isValidTalk,
+isValidTalkWatchedAt, isValidTalkRate, isValidEditedPerson,
+  async (req, res) => {
+    res.status(200);
 });
