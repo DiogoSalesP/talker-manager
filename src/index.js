@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAllTalkers } = require('./utils/handleTalkers');
-const { isValidEmail, isValidPassword, token } = require('./utils/handleLogin');
+const { getAllTalkers, isValidAuthorization, isValidName, isValidAge, isValidTalk, isValidTalkRate,
+  isValidTalkWatchedAt, registration, generateToken,
+   } = require('./utils/handleTalkers');
+const { isValidEmail, isValidPassword } = require('./utils/handleLogin');
 
 const app = express();
 app.use(bodyParser.json());
@@ -37,5 +39,13 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.post('/login', isValidEmail, isValidPassword, (_req, res) => {
-  res.status(200).json({ token: `${token()}` });
+  const token = generateToken();
+  return res.status(200).json({ token });
+});
+
+app.post('/talker', isValidAuthorization, isValidName, isValidAge, isValidTalk,
+  isValidTalkWatchedAt, isValidTalkRate, registration, 
+  (req, res) => {
+  const body = req;
+  res.status(200).json(body);
 });

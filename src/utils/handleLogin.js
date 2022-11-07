@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+// const crypto = require('crypto');
 
 const isValidEmail = (req, res, next) => {
   const { email } = req.body;
@@ -26,12 +26,12 @@ const isValidPassword = (req, res, next) => {
   next();
 };
 
-function token() {
-  return crypto.randomBytes(8).toString('hex');
-}
+// function token() {
+//   return crypto.randomBytes(8).toString('hex');
+// }
 
 module.exports = {
-  token,
+  // token,
   isValidEmail,
   isValidPassword,
 };
