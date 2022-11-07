@@ -107,19 +107,30 @@ const isValidEditedPerson = async (req, res, next) => {
   const talker = await getAllTalkers();
   const useId = req.params.id;
   const { name, age, talk } = req.body;
-  const newDData = talker.find((ele) => ele.id === Number(useId));
-  if (newDData) {
-    newDData.id = Number(useId);
-    newDData.name = name;
-    newDData.age = age;
-    newDData.talk = talk;
+  const newTalker = talker.find((ele) => ele.id === Number(useId));
+  if (newTalker) {
+    newTalker.id = Number(useId);
+    newTalker.name = name;
+    newTalker.age = age;
+    newTalker.talk = talk;
   } 
-  const allDate = JSON.stringify([...talker, newDData]);
+  const allDate = JSON.stringify([...talker, newTalker]);
   await fs.writeFile(userPath, allDate);
-  res.status(200).json(newDData);
+  res.status(200).json(newTalker);
 
   return next();
 };
+
+  const removePerson = async (req, res, next) => {
+    const talker = await getAllTalkers();
+    const useId = req.params.id;
+    const newTalker = talker.filter((element) => element.id !== Number(useId));
+    const allDate = JSON.stringify(newTalker);
+    await fs.writeFile(userPath, allDate);
+    res.status(204).end();
+
+    return next();
+  };
 
  module.exports = {
   getAllTalkers,
@@ -132,4 +143,5 @@ const isValidEditedPerson = async (req, res, next) => {
   registration,
   generateToken,
   isValidEditedPerson,
+  removePerson,
  };
