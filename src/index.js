@@ -1,9 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAllTalkers, isValidAuthorization, isValidName, isValidAge, isValidTalk, isValidTalkRate,
-  isValidTalkWatchedAt, registration, generateToken, isValidEditedPerson, removePerson,
-   } = require('./utils/handleTalkers');
-const { isValidEmail, isValidPassword } = require('./utils/handleLogin');
+const { loginRoute } = require('./routes/login');
+const talkerRoute = require('./routes/talker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -20,38 +18,6 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-app.get('/talker', async (_req, res) => {
-  const users = await getAllTalkers();
-  if (users) {
-     return res.status(200).json(users);
-  } 
-     return res.status(200).json([]);
-});
+app.use('/login', loginRoute);
 
-app.get('/talker/:id', async (req, res) => {
-  const { id } = req.params;
-  const users = await getAllTalkers();
-  const useId = users.find((element) => element.id === Number(id));
-  if (useId) {
-    return res.status(200).json(useId);
-  } 
-  return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
-});
-
-app.post('/login', isValidEmail, isValidPassword, (_req, res) => {
-  const token = generateToken();
-  return res.status(200).json({ token });
-});
-
-app.post('/talker', isValidAuthorization, isValidName, isValidAge, isValidTalk,
-  isValidTalkWatchedAt, isValidTalkRate, registration, 
-  (req, res) => {
-  const body = req;
-  return res.status(200).json(body);
-});
-
-app.put('/talker/:id', isValidAuthorization, isValidName, isValidAge, isValidTalk,
-isValidTalkWatchedAt, isValidTalkRate, isValidEditedPerson,
-  (_req, res) => res.status(200));
-
-app.delete('/talker/:id', isValidAuthorization, removePerson, (_req, res) => res.status(204));
+app.use('/talker', talkerRoute);

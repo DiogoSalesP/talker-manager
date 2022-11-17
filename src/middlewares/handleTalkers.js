@@ -121,7 +121,7 @@ const isValidEditedPerson = async (req, res, next) => {
   return next();
 };
 
-  const removePerson = async (req, res, next) => {
+const removePerson = async (req, res, next) => {
     const talker = await getAllTalkers();
     const useId = req.params.id;
     const newTalker = talker.filter((element) => element.id !== Number(useId));
@@ -130,7 +130,12 @@ const isValidEditedPerson = async (req, res, next) => {
     res.status(204).end();
 
     return next();
-  };
+};
+
+const findTalkers = async (query) => {
+    const talkers = await getAllTalkers();
+    return talkers.name.filter((talker) => talker.name.toLowerCase().includes(query.toLowerCase()));
+};
 
  module.exports = {
   getAllTalkers,
@@ -144,4 +149,5 @@ const isValidEditedPerson = async (req, res, next) => {
   generateToken,
   isValidEditedPerson,
   removePerson,
+  findTalkers,
  };
