@@ -20,6 +20,7 @@ talkerRoute.get('/search', isValidAuthorization, async (req, res) => {
   const search = talkers
     .filter((talker) => talker.name
     .includes(q));
+
     return res.status(200).json(search);
 });
 
@@ -27,23 +28,26 @@ talkerRoute.get('/:id', async (req, res) => {
   const { id } = req.params;
   const users = await getAllTalkers();
   const useId = users.find((element) => element.id === Number(id));
-  if (useId) {
-    return res.status(200).json(useId);
-  } 
-  return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
+  if (!useId) {
+    return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
+  }
+
+  return res.status(200).json(useId);
 });
 
 talkerRoute.get('/', async (_req, res) => {
   const users = await getAllTalkers();
-  if (users) {
-     return res.status(200).json(users);
-  } 
-     return res.status(200).json([]);
+  if (!users) {
+    return res.status(200).json([]);
+  }
+
+  return res.status(200).json(users);
 });
 
 talkerRoute.post('/', isValidAuthorization, isValidName, isValidAge, isValidTalk,
   isValidTalkWatchedAt, isValidTalkRate, registration, (req, res) => {
     const body = req;
+
     return res.status(200).json(body);
 });
 
